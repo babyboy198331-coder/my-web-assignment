@@ -7,7 +7,12 @@ function App() {
   const [user, setUser] = React.useState({});
 
 React.useEffect(() => {
-onAuthStateChanged
+onAuthStateChanged(auth, (user) => {
+  console.log(user);
+  if (user) {
+    setUser(user)
+  }
+})
 }, []);
 
   function register() {
