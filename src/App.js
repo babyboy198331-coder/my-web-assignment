@@ -29,7 +29,7 @@ createUserWithEmailAndPassword(auth, 'email@email.com', 'test123')
   function login() {
     signInWithEmailAndPassword(auth, 'email@email.com', 'test123') 
     .then((user) => {
-  setUser(user);
+  setUser(user.user);
 })
 .catch((error) => {
   console.log(error.message);
