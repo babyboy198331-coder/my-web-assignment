@@ -5,6 +5,7 @@ import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, on
 
 function App() {
   const [user, setUser] = React.useState({});
+  const [loading, setLoading] = React.useState(true);
 
 React.useEffect(() => {
 onAuthStateChanged(auth, (user) => {
