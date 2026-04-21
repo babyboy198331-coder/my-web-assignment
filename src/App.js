@@ -1,25 +1,28 @@
 import React from 'react';
 import './App.css';
 import { auth, db } from './firebase/init';
-import { collection, addDoc, getDocs, getDoc, doc, query, where, updateDoc } from "firebase/firestore";
+import {collection, addDoc, getDocs, getDoc, doc, query, where, updateDoc} from "firebase/firestore";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
 
 function App() {
   const [user, setUser] = React.useState({});
   const [loading, setLoading] = React.useState(true);
 
-async function updatePost() {
-   const hardcodedId = "3fERNXnZ4kvccLl5CZG3";
+  async function updatePost() {
+    const hardcodedId = "3fERNXnZ4kvccLl5CZG3";
     const postRef = doc(db, "posts", hardcodedId);
-     const post = await getPostById(hardcodedId)
+
+    const post = await getPostById(hardcodedId);
+
     const newPost = {
       ...post,
       description: "Finish Frontend simplified",
       uid: "1",
       title: "Land a $200k job"
     };
-    updateDoc(postRef, newPost);
-}
+
+    await updateDoc(postRef, newPost);
+  }
 
   function createPost() {
     const post = {
@@ -27,6 +30,7 @@ async function updatePost() {
       description: "Do Frontend Simplified",
       uid: user.uid,
     };
+
     addDoc(collection(db, "posts"), post);
   }
 
@@ -39,17 +43,20 @@ async function updatePost() {
   async function getPostById(id) {
     const postRef = doc(db, "posts", id);
     const postSnap = await getDoc(postRef);
-    return postSnap.data();
+
+    const post = postSnap.data();
     console.log(post);
+
+    return post;
   }
 
   async function getPostByUid() {
     const postCollectionRef = query(
       collection(db, "posts"),
-      where("uid", "==", user.uid) // ❗ missing comma fixed
+      where("uid", "==", user.uid)
     );
 
-    const { docs } = await getDocs(postCollectionRef); // ❗ use query, not collection
+    const { docs } = await getDocs(postCollectionRef);
     const posts = docs.map((elem) => ({ ...elem.data(), id: elem.id }));
     console.log(posts);
   }
@@ -58,6 +65,7 @@ async function updatePost() {
     onAuthStateChanged(auth, (user) => {
       setLoading(false);
       console.log(user);
+
       if (user) {
         setUser(user);
       }
@@ -95,11 +103,15 @@ async function updatePost() {
       <button onClick={login}>Login</button>
       <button onClick={logout}>Logout</button>
 
-      {loading ? 'loading...' : user?.email} {/* safer */}
+      {loading ? 'loading...' : user?.email}
 
       <button onClick={createPost}>Create Post</button>
       <button onClick={getAllPosts}>Get All Posts</button>
-      <button onClick={getPostById}>Get Post By Id</button>
+
+      <button onClick={() => getPostById("3fERNXnZ4kvccLl5CZG3")}>
+        Get Post By Id
+      </button>
+
       <button onClick={getPostByUid}>Get Post By Uid</button>
       <button onClick={updatePost}>Update Post</button>
     </div>
