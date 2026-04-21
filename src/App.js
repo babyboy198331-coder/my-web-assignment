@@ -8,13 +8,15 @@ function App() {
   const [user, setUser] = React.useState({});
   const [loading, setLoading] = React.useState(true);
 
-function updatePost() {
+async function updatePost() {
    const hardcodedId = "3fERNXnZ4kvccLl5CZG3";
     const postRef = doc(db, "posts", hardcodedId);
+     const post = await getPostById(hardcodedId)
     const newPost = {
+      ...post,
       description: "Finish Frontend simplified",
       uid: "1",
-      title: "Land a $150k job"
+      title: "Land a $200k job"
     };
     updateDoc(postRef, newPost);
 }
@@ -34,11 +36,10 @@ function updatePost() {
     console.log(posts);
   }
 
-  async function getPostById() {
-    const hardcodedId = "3fERNXnZ4kvccLl5CZG3";
-    const postRef = doc(db, "posts", hardcodedId);
+  async function getPostById(id) {
+    const postRef = doc(db, "posts", id);
     const postSnap = await getDoc(postRef);
-    const post = postSnap.data();
+    return postSnap.data();
     console.log(post);
   }
 
