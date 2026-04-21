@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import { auth } from './firebase/init';
+import { auth, db } from './firebase/init';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
 
 function App() {
